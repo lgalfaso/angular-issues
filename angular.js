@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-local+sha.408d958
+ * @license AngularJS v1.3.0-local+sha.ccba305
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -68,7 +68,7 @@ function minErr(module) {
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.3.0-local+sha.408d958/' +
+    message = message + '\nhttp://errors.angularjs.org/1.3.0-local+sha.ccba305/' +
       (module ? module + '/' : '') + code;
     for (i = 2; i < arguments.length; i++) {
       message = message + (i == 2 ? '?' : '&') + 'p' + (i-2) + '=' +
@@ -1919,7 +1919,7 @@ function setupModuleLoader(window) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.3.0-local+sha.408d958',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.3.0-local+sha.ccba305',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 3,
   dot: 0,
@@ -6281,7 +6281,9 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
               case '&':
                 parentGet = $parse(attrs[attrName]);
-                isolateScope[scopeName] = parentGetFn(parentGet, scope);
+                isolateScope[scopeName] = function(locals) {
+                  return parentGet(scope, locals);
+                };
                 break;
 
               default:
@@ -6627,11 +6629,6 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       }
     }
 
-   function parentGetFn(parentGet, scope) {
-     return function(locals) {
-      return parentGet(scope, locals); 
-     };
-   }
 
     function getTrustedContext(node, attrNormalizedName) {
       if (attrNormalizedName == "srcdoc") {
@@ -7289,7 +7286,7 @@ function $HttpProvider() {
      *
      * ```
      * module.run(function($http) {
-     *   $http.defaults.headers.common.Authentication = 'Basic YmVlcDpib29w'
+     *   $http.defaults.headers.common.Authorization = 'Basic YmVlcDpib29w'
      * });
      * ```
      *
@@ -16811,7 +16808,6 @@ function addNativeHtml5Validators(ctrl, validatorName, element) {
       return value;
     };
     ctrl.$parsers.push(validator);
-    ctrl.$formatters.push(validator);
   }
 }
 
@@ -21613,7 +21609,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
                   lastElement.val(existingOption.id = option.id);
                 }
                 // lastElement.prop('selected') provided by jQuery has side-effects
-                if (existingOption.selected !== option.selected) {
+                if (existingOption[0].selected !== option.selected) {
                   lastElement.prop('selected', (existingOption.selected = option.selected));
                 }
               } else {
