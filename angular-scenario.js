@@ -12845,10 +12845,6 @@ forEach({
     var index = element, parent = element.parentNode;
     forEach(new JQLite(newElement), function(node){
       parent.insertBefore(node, index.nextSibling);
-      // Workaround for Chrome. Check #6828
-      if (nodeName_(node) === 'OPTION' && (new JQLite(node)).attr('selected') === 'selected') {
-        node.selected = true;
-      }
       index = node;
     });
   },
