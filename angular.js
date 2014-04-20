@@ -21961,7 +21961,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
           if (unknownOption.parent()) unknownOption.remove();
         }
         if (element.attr('selected') === 'selected') {
-          element.selected = true;
+          element[0].selected = true;
         }
       };
 
