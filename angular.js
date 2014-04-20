@@ -3053,7 +3053,7 @@ forEach({
     var index = element, parent = element.parentNode;
     forEach(new JQLite(newElement), function(node){
       parent.insertBefore(node, index.nextSibling);
-      // Workaround for Chrome. Check 
+      // Workaround for Chrome. Check #6828
       if (nodeName_(node) === 'OPTION' && (new JQLite(node)).attr('selected') === 'selected') {
         node.selected = true;
       }
@@ -21956,13 +21956,16 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
       };
 
 
-      self.addOption = function(value) {
+      self.addOption = function(value, element) {
         assertNotHasOwnProperty(value, '"option value"');
         optionsMap[value] = true;
 
         if (ngModelCtrl.$viewValue == value) {
           $element.val(value);
           if (unknownOption.parent()) unknownOption.remove();
+        }
+        if (element.attr('selected') === 'selected') {
+          element.selected = true;
         }
       };
 
@@ -22415,10 +22418,10 @@ var optionDirective = ['$interpolate', function($interpolate) {
           scope.$watch(interpolateFn, function interpolateWatchAction(newVal, oldVal) {
             attr.$set('value', newVal);
             if (newVal !== oldVal) selectCtrl.removeOption(oldVal);
-            selectCtrl.addOption(newVal);
+            selectCtrl.addOption(newVal, element);
           });
         } else {
-          selectCtrl.addOption(attr.value);
+          selectCtrl.addOption(attr.value, element);
         }
 
         element.on('$destroy', function() {
